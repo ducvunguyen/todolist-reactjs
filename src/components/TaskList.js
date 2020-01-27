@@ -2,10 +2,11 @@ import React, {Component} from 'react';
 import TaskItem  from './TaskItem';
 
 class TaskList extends Component {
+
 	render(){
     var tasks = this.props.listTask; // cung co the viet var {listTask} = this.props
     var element = tasks.map((task, index) =>{
-      return <TaskItem key={task.id} index={index} task={task} />
+      return <TaskItem key={task.id} index={index} task={task} onUpdateStatus={this.props.onUpdateStatus} onDeleteItem={this.props.onDeleteItem}/>
     });
 
 		return(
