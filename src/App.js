@@ -17,6 +17,8 @@ class App extends Component{
             status : -1,
          },
          keyword: '',
+         sortBy: 'name',
+         sortValue: 1,
       };
    }
 
@@ -209,9 +211,17 @@ class App extends Component{
       // console.log(this.state.keyword);
    }
 
+   onSort =(sortBy, sortValue)=>{
+      this.setState({
+         sortBy: sortBy,
+         sortValue: sortValue,
+      });
+      // console.log(this.state.sortBy, '-', this.state.SortValue);
+   }
+
    render(){
       //var tasks = this.state.tasks;
-      var {tasks,isDisplayForm, taskEditing, filter, keyword} = this.state;
+      var {tasks,isDisplayForm, taskEditing, filter, keyword, sortBy, sortValue} = this.state;
       // tim kiem datatable
       if (filter) {// tim kiem theo ten
         if (filter.name) {
@@ -236,7 +246,27 @@ class App extends Component{
             return task.name.toLowerCase().indexOf(keyword) !== -1;
          });
       }
-
+      // sort
+      
+      if (sortBy === 'name') {
+         tasks.sort((a, b)=>{
+            if (a.name > b.name) { // tang dan
+               return sortValue
+            }
+            else if (a.name < b.name) {
+               return -sortValue
+            }else return 0
+         });
+      }else{
+         tasks.sort((a, b)=>{
+            if (a.status > b.status) { // tang dan
+               return -sortValue
+            }
+            else if (a.status < b.status) {
+               return sortValue
+            }else return 0
+         });
+      }
       var elemTaskForm = isDisplayForm === true ? <TaskForm task={taskEditing} onSubmit={this.onSubmit} turnOffForm={ this.turnOffForm } /> : '';
          // console.log(filter);
          return(          
@@ -294,7 +324,7 @@ class App extends Component{
                         <br/>
                         <br/>
                         {/*chuc nang search and sort*/}
-                        <Control onSearch={this.onSearch} />
+                        <Control sortValue={this.state.sortValue} sortBy={this.state.sortBy} onSort={this.onSort} onSearch={this.onSearch} />
 
                         <br/>
                         <div className="row">
