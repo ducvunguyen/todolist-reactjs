@@ -18,8 +18,30 @@ class TaskForm extends Component{
 				status: this.props.task.status,
 			})
 		}
-		console.log(this.state);
+		//console.log(this.state);
 	}
+
+	//khi mo cai form len ta se nhan dc cai props
+	//tuc la khi bam vao nut update nao t se nhan dc cac gia tri props do.
+	//khi dungf willMounts thi ta chi goi dc 1 lan, con willReceiveProps ta goi dc nhieu lan
+	componentWillReceiveProps(nextProps){
+		//chuyen tu form them thanh sua
+      if (nextProps && nextProps.task) {
+      	this.setState({
+				id: nextProps.task.id,
+				name: nextProps.task.name,
+				status: nextProps.task.status,
+			})
+      	}
+      	//chuyen tu form sua thanh them
+      	else if (!nextProps.task) {
+      		this.setState({
+      			id: '',
+				name: '',
+				status: false,
+      		});
+      	}
+   	}
 	turnOffForm =()=> {
 		this.props.turnOffForm();
 	}

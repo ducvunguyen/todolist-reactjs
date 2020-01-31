@@ -28,6 +28,11 @@ class App extends Component{
       }
    }
 
+   //khi mo cai form len roi van nhan dc cai props
+   // componentWillReceiveProps(nextProps){ 
+   //    console.log(nextProps);
+   // }
+
    onGenerateData = () =>{
       var tasks = [
          // {
@@ -70,9 +75,19 @@ class App extends Component{
    }
 
    onToggleForm =()=>{
-       this.setState({
-         isDisplayForm: !this.state.isDisplayForm ,
+      //kiem tra xem isDisPlay dang mo va taskEditing co du lieu
+      if (this.state.isDisplayForm === true && this.state.taskEditing) {
+         this.setState({
+         isDisplayForm: true,
+         taskEditing: null, //de form se tro thanh form them
        });
+      }else{
+            this.setState({
+            isDisplayForm: !this.state.isDisplayForm ,
+            taskEditing: null, //de form se tro thanh form them
+         });
+      }
+       
    }
 
    turnOffForm = ()=>{
