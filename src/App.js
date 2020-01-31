@@ -9,9 +9,13 @@ class App extends Component{
       super(props);
       //tao danh sach
       this.state = {
-          tasks : [], // id unique, namme, status
-          isDisplayForm: false, //isDisplayForm dung an hien form
-          taskEditing: null,
+            tasks : [], // id unique, namme, status
+            isDisplayForm: false, //isDisplayForm dung an hien form
+            taskEditing: null,
+            filter: {
+               name: '',
+               status : -1,
+         }
       };
    }
 
@@ -184,11 +188,41 @@ class App extends Component{
       this.onShowForm();
 
    }
+   onFilter = (filterName, filterStatus)=>{
+      //console.log(filterName, '-', filterStatus);
+      filterStatus = parseInt(filterStatus, 10);// status dang la string ta ep ve kieu int
+      //console.log(typeof filterStatus);
+      this.setState({
+         filter: {
+            name: filterName.toLowerCase(),
+            status: filterStatus,
+         }
+      });
+   }
 
    render(){
-      var tasks = this.state.tasks;
-      var {isDisplayForm, taskEditing} = this.state;
+      //var tasks = this.state.tasks;
+      var {tasks,isDisplayForm, taskEditing, filter} = this.state;
+      // tim kiem datatable
+      if (filter) {// tim kiem theo ten
+        if (filter.name) {
+            tasks = tasks.filter((task) =>{
+                //toLoweCase  chuyen ve chu thuong, indexOf kiem tra xem chuoi filter.name co hay ko neu filter.name = -1 ko tim  thay
+                return task.name.toLowerCase().indexOf(filter.name) !== -1;
+            });
+         }
+         tasks = tasks.filter((task)=>{// tim kiem theo status
+            if(filter.status === -1){
+               return task;
+            }
+            else{
+               return task.status === (filter.status ===1 ? true : false);
+            }
+         });
+      }
+
       var elemTaskForm = isDisplayForm === true ? <TaskForm task={taskEditing} onSubmit={this.onSubmit} turnOffForm={ this.turnOffForm } /> : '';
+         // console.log(filter);
          return(          
             <div className="container">
                 <div className="text-center">
@@ -293,7 +327,7 @@ class App extends Component{
                                     </tr>
                                 </tbody>
                             </table>*/}
-                            <TaskList onUpdate={this.onUpdate} onDeleteItem={this.onDeleteItem} listTask={tasks} onUpdateStatus={this.onUpdateStatus}/>
+                            <TaskList onFilter={this.onFilter} onUpdate={this.onUpdate} onDeleteItem={this.onDeleteItem} listTask={tasks} onUpdateStatus={this.onUpdateStatus}/>
                         </div>
                     </div>
                 </div>
