@@ -9,13 +9,14 @@ class App extends Component{
       super(props);
       //tao danh sach
       this.state = {
-            tasks : [], // id unique, namme, status
-            isDisplayForm: false, //isDisplayForm dung an hien form
-            taskEditing: null,
-            filter: {
-               name: '',
-               status : -1,
-         }
+         tasks : [], // id unique, namme, status
+         isDisplayForm: false, //isDisplayForm dung an hien form
+         taskEditing: null,
+         filter: {
+            name: '',
+            status : -1,
+         },
+         keyword: '',
       };
    }
 
@@ -200,9 +201,17 @@ class App extends Component{
       });
    }
 
+   onSearch =(keyword)=>{
+      // console.log(keyword);
+      this.setState({
+         keyword: keyword,
+      });
+      // console.log(this.state.keyword);
+   }
+
    render(){
       //var tasks = this.state.tasks;
-      var {tasks,isDisplayForm, taskEditing, filter} = this.state;
+      var {tasks,isDisplayForm, taskEditing, filter, keyword} = this.state;
       // tim kiem datatable
       if (filter) {// tim kiem theo ten
         if (filter.name) {
@@ -218,6 +227,13 @@ class App extends Component{
             else{
                return task.status === (filter.status ===1 ? true : false);
             }
+         });
+      }
+      //chuc nang Search
+      if (keyword) {
+          tasks = tasks.filter((task) =>{
+            //toLoweCase  chuyen ve chu thuong, indexOf kiem tra xem chuoi filter.name co hay ko neu keyword = -1 ko tim  thay
+            return task.name.toLowerCase().indexOf(keyword) !== -1;
          });
       }
 
@@ -278,7 +294,7 @@ class App extends Component{
                         <br/>
                         <br/>
                         {/*chuc nang search and sort*/}
-                        <Control />
+                        <Control onSearch={this.onSearch} />
 
                         <br/>
                         <div className="row">

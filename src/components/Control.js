@@ -15,7 +15,7 @@ class Control extends Component {
 	                    className="form-control"
 	                    placeholder="Nhap tu khoa"/>
 	                </div>*/}
-	                <Search />
+	                <Search onSearch={this.props.onSearch} />
 	            </div>
 	            <Sort />
 	        </div>
