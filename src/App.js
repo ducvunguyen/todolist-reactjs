@@ -11,6 +11,7 @@ class App extends Component{
       this.state = {
           tasks : [], // id unique, namme, status
           isDisplayForm: false, //isDisplayForm dung an hien form
+          taskEditing: null,
       };
    }
 
@@ -82,24 +83,30 @@ class App extends Component{
    }
 
    onSubmit =(data)=>{
-      // console.log(data);
+      
       var {tasks} = this.state;
-      var DB = {
-         id : this.generateID(),
-         name : data.name,
-         status: data.status,
+      
+      if (data.id !== '') {
+         var index = this.findIndex(data.id);
+         console.log(index);
+         tasks[index] = data;
+      }else{
+         data.id = this.generateID();
+         tasks.push(data);
       }
-      tasks.push(DB);
       this.setState({
-         tasks : tasks,
+            tasks : tasks,
+            taskEditing: null,
       });
+      
       localStorage.setItem('tasks', JSON.stringify(tasks));
+      this.onToggleForm();
    }
 
    onUpdateStatus =(id)=>{
       var {tasks} = this.state;
       var index = this.findIndex(id); // tim vi tri thang can cap nhat
-      console.log(index);
+      console.log(id);
       // neu tim thay
       if (index !== -1) {
          //ta cap nhat lai
@@ -113,7 +120,7 @@ class App extends Component{
 
    //tim kiem den den phan tu co chua id do
    findIndex =(id)=>{
-      console.log(id);
+      // console.log(id);
       var {tasks} = this.state;
       var result = -1;
       tasks.forEach((task, index) =>{
@@ -141,11 +148,32 @@ class App extends Component{
          this.turnOffForm();
       }  
    }
+   onShowForm =()=>{
+      this.setState({
+         isDisplayForm: true,//!this.state.isDisplayForm,
+      })
+   }
+   onUpdate =(id)=>{
+      //console.log(id);
+      var {tasks} = this.state;
+      var index = this.findIndex(id);
+      var taskEditing = tasks[index];
+      // console.log(taskEditing);
+      // this.setState({
+      //    taskEditing : taskEditing, //ta se co dc task dang cap nhat
+      // })
+      this.setState({
+         taskEditing: taskEditing,
+      })
+      //console.log(this.state.taskEditing);
+      this.onShowForm();
+
+   }
 
    render(){
       var tasks = this.state.tasks;
-      var {isDisplayForm} = this.state;
-      var elemTaskForm = isDisplayForm === true ? <TaskForm onSubmit={this.onSubmit} turnOffForm={ this.turnOffForm } /> : '';
+      var {isDisplayForm, taskEditing} = this.state;
+      var elemTaskForm = isDisplayForm === true ? <TaskForm task={taskEditing} onSubmit={this.onSubmit} turnOffForm={ this.turnOffForm } /> : '';
          return(          
             <div className="container">
                 <div className="text-center">
@@ -250,7 +278,7 @@ class App extends Component{
                                     </tr>
                                 </tbody>
                             </table>*/}
-                            <TaskList onDeleteItem={this.onDeleteItem} listTask={tasks} onUpdateStatus={this.onUpdateStatus}/>
+                            <TaskList onUpdate={this.onUpdate} onDeleteItem={this.onDeleteItem} listTask={tasks} onUpdateStatus={this.onUpdateStatus}/>
                         </div>
                     </div>
                 </div>

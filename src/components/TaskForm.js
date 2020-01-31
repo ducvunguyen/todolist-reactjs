@@ -5,15 +5,25 @@ class TaskForm extends Component{
 	constructor(props){
 		super(props);
 		this.state={
+			id: '',
 			name: '',
 			status: false,
 		}
 	}
-
+	componentWillMount(){
+		if (this.props.task) {
+			this.setState({
+				id: this.props.task.id,
+				name: this.props.task.name,
+				status: this.props.task.status,
+			})
+		}
+		console.log(this.state);
+	}
 	turnOffForm =()=> {
 		this.props.turnOffForm();
 	}
-
+	//khi nhap du lieu
 	onChange =(event)=>{
 		var target = event.target;//lay target
 		var name = target.name; // lay name
@@ -26,10 +36,12 @@ class TaskForm extends Component{
 			[name] : value,
 		});
 	}
+	//bam submit
 	onSubmit =(event)=>{
 		event.preventDefault();//ko load lai trang
 		this.props.onSubmit(this.state);//truyen data ra APP.js
 	}
+	//cancel
 	onClear =()=>{
 		this.setState({
 			name: '',
@@ -40,12 +52,12 @@ class TaskForm extends Component{
 
 	}
 	render(){
-
+		var {id} = this.state;
 		return(
 			<div className="panel panel-warning">
 	            <div className="panel-heading">
 	                <h3 className="panel-title">
-	                    Add task &#160; <span className="center-right glyphicon glyphicon-remove" onClick={ this.turnOffForm }></span>
+	                    {id !=='' ? 'Update task' : 'Add task '}&#160; <span className="center-right glyphicon glyphicon-remove" onClick={ this.turnOffForm }></span>
 	                </h3>
 	            </div>
 	            <div className="panel-body">
@@ -63,7 +75,7 @@ class TaskForm extends Component{
 	                    <div className="form-group">
 	                        <label>Status: </label>
 	                        <select className="form-control" name="status" value={this.state.status} onChange={this.onChange}>
-	                            <option value={true} >Action</option>
+	                            <option value={true} >Active</option>
 	                            <option value={false} >Hidden</option>
 	                        </select>
 	                    </div>
