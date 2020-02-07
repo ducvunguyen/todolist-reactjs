@@ -3,6 +3,7 @@ import './App.css';
 import TaskForm from './components/TaskForm';
 import Control from './components/Control';
 import TaskList from './components/TaskList';
+import demo from './traning/demo'; 
 
 class App extends Component{
     constructor(props){
@@ -128,6 +129,11 @@ class App extends Component{
    onUpdateStatus =(id)=>{
       var {tasks} = this.state;
       var index = this.findIndex(id); // tim vi tri thang can cap nhat
+
+      //su dung lodash de tim kiem id
+      // var index = _.findIndex(tasks, (task) =>{
+      //    return task.id = id;
+      // });
       console.log(id);
       // neu tim thay
       if (index !== -1) {
